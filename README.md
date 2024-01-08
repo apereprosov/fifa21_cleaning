@@ -66,3 +66,31 @@ We can divide them into subgroups:
 
 ## STAGE 2: Data Cleaning & Transforming 
 
+After review, I have identified the parameters that need to be handled
+
+```
+'hits', 'height', 'weight', 'wage', 'value', 'release_clause'
+
+'ir','w/f' ,'contract','club'
+
+'loan_date_end','joined'
+```
+If the other parameters needed to be generalized to a common form/type e.g. 
+```python
+def to_cm(row):
+  if 'cm' in row:
+    return float(row.replace('cm','')))
+  else:
+    feet,inches = row.split('}'')
+    inches = inches.replace(''',''')
+    return int(feet)*30.48+int(inches)*2.54
+```
+then the contract column stores information about both the type of the contract and the time of its continuation. I decided to divide the beginning of the lease, beginning and end of the contract, contract type into 3 parameters.
+```python
+def contract_split(row):
+  if '~' in row:
+    start_date,end_date = map(float,row.split(' ~ '))
+    return start_date,end_date,'Contract'
+  else:
+    return np.nan,np.nan,row
+```
